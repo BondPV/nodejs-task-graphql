@@ -10,6 +10,12 @@ export interface IPost {
   authorId: string;
 }
 
+export interface IPostInput {
+  title: string;
+  content: string;
+  authorId: string;
+}
+
 export const PostType: GraphQLObjectType = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({

@@ -12,6 +12,13 @@ export interface IProfile {
   userId: string;
 };
 
+export interface IProfileInput {
+  isMale: boolean;
+  yearOfBirth: number;
+  memberTypeId: MemberTypeId;
+  userId: string;
+};
+
 export const ProfileType: GraphQLObjectType = new GraphQLObjectType({
   name: 'Profile',
   fields: () => ({

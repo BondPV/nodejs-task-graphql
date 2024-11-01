@@ -4,8 +4,13 @@ import { ProfileType } from './profile.js';
 import { PostType } from './post.js';
 import { PrismaClient } from '@prisma/client';
 
-interface IUser {
+export interface IUser {
   id: string;
+  name: string;
+  balance: number;
+}
+
+export interface IUserInput {
   name: string;
   balance: number;
 }
