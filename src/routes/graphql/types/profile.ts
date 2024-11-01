@@ -4,7 +4,7 @@ import { MemberType, MemberTypeId, MemberTypeIdEnum } from './member.js';
 import { UserType } from './user.js';
 import { PrismaClient } from '@prisma/client';
 
-interface IProfile {
+export interface IProfile {
   id: string;
   isMale: boolean;
   yearOfBirth: number;
