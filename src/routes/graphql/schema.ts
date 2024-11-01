@@ -1,18 +1,18 @@
 import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { userType } from './types/user.js';
+import { UserType } from './types/user.js';
 import { UUIDType } from './types/uuid.js';
 
 const query = new GraphQLObjectType({
 name: 'Query',
 fields: {
     user: {
-      type: userType,
+      type: UserType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
     },
     users: {
-      type: new GraphQLList(userType),
+      type: new GraphQLList(UserType),
     },
   },
 });
