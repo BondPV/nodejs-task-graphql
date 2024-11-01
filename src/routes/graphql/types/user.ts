@@ -4,15 +4,13 @@ import { ProfileType } from './profile.js';
 import { PostType } from './post.js';
 import { PrismaClient } from '@prisma/client';
 
-export interface IUser {
-  id: string;
+export interface IUserInput {
   name: string;
   balance: number;
 }
 
-export interface IUserInput {
-  name: string;
-  balance: number;
+export interface IUser extends IUserInput {
+    id: string;
 }
 
 export const UserType: GraphQLObjectType = new GraphQLObjectType({

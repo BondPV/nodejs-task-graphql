@@ -3,17 +3,14 @@ import { UUIDType } from './uuid.js';
 import { UserType } from './user.js';
 import { PrismaClient } from '@prisma/client';
 
-export interface IPost {
-  id: string;
+export interface IPostInput {
   title: string;
   content: string;
   authorId: string;
 }
 
-export interface IPostInput {
-  title: string;
-  content: string;
-  authorId: string;
+export interface IPost extends IPostInput {
+  id: string;
 }
 
 export const PostType: GraphQLObjectType = new GraphQLObjectType({

@@ -1,23 +1,20 @@
 import { GraphQLBoolean, GraphQLInputObjectType, GraphQLInt, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { UUIDType } from './uuid.js';
-import { MemberType, MemberTypeId, MemberTypeIdEnum } from './member.js';
+import { MemberType, MemberTypeIdEnum } from './member.js';
 import { UserType } from './user.js';
 import { PrismaClient } from '@prisma/client';
-
-export interface IProfile {
-  id: string;
-  isMale: boolean;
-  yearOfBirth: number;
-  memberTypeId: MemberTypeId;
-  userId: string;
-};
 
 export interface IProfileInput {
   isMale: boolean;
   yearOfBirth: number;
-  memberTypeId: MemberTypeId;
+  memberTypeId: string;
   userId: string;
 };
+
+export interface IProfile extends IProfileInput {
+  id: string;
+};
+
 
 export const ProfileType: GraphQLObjectType = new GraphQLObjectType({
   name: 'Profile',

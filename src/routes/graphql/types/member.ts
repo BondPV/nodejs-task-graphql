@@ -10,10 +10,8 @@ export const MemberTypeIdEnum = new GraphQLEnumType({
   },
 });
 
-export type MemberTypeId = 'BASIC' | 'BUSINESS';
-
 export interface IMember {
-  id: MemberTypeId;
+  id: string;
   discount: number;
   postsLimitPerMonth: number;
 }
@@ -26,7 +24,7 @@ export const MemberType = new GraphQLObjectType({
     postsLimitPerMonth: { type: new GraphQLNonNull(GraphQLInt) },
     profiles: {
       type: new GraphQLList(ProfileType),
-      resolve: async ( source: IMember, _args, { prisma }: { prisma: PrismaClient }) => {
+      resolve: async ( source: { id: string}, _args, { prisma }: { prisma: PrismaClient }) => {
         return await prisma.profile.findMany({ where: { memberTypeId: source.id } });
       }
     },
