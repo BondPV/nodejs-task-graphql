@@ -4,22 +4,50 @@ import { ProfileType } from './profile.js';
 import { PostType } from './post.js';
 import { PrismaClient } from '@prisma/client';
 
+interface IUser {
+  id: string;
+  name: string;
+  balance: number;
+}
+
 export const UserType: GraphQLObjectType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: { type: new GraphQLNonNull(UUIDType) },
+    id: { type: (UUIDType) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
     profile: {
       type: ProfileType,
-      resolve: async (userId: string, { prisma }: { prisma: PrismaClient }) => {
-        return await prisma.profile.findUnique({ where: { userId } });
+      resolve: async (source: IUser, _args, { prisma }: { prisma: PrismaClient }) => {
+        return await prisma.profile.findUnique({ where: { userId: source.id } });
       },
     },
     posts: {
       type: new GraphQLList(PostType),
-      resolve: async (authorId: string, { prisma }: { prisma: PrismaClient }) => {
-        return await prisma.post.findMany({ where: { authorId } });
+      resolve: async (source: IUser, _args, { prisma }: { prisma: PrismaClient }) => {
+        return await prisma.post.findMany({ where: { authorId: source.id } });
+      }
+    },
+    userSubscribedTo: {type: new GraphQLList(UserType),
+      async resolve(source: IUser, _args, { prisma }: { prisma: PrismaClient }) {
+        const subscribers = await prisma.subscribersOnAuthors.findMany({ where: { subscriberId: source.id } });
+  
+        return await prisma.user.findMany({
+          where: {
+            id: { in: subscribers.map((user) => user.authorId) }
+          }
+        });
+      }
+    },
+    subscribedToUser: {type: new GraphQLList(UserType),
+      async resolve(source: IUser, _args, { prisma }: { prisma: PrismaClient }) {
+        const subscribers =  await prisma.subscribersOnAuthors.findMany({ where: { authorId: source.id } });
+  
+        return await prisma.user.findMany({
+          where: {
+            id: { in: subscribers.map((user) => user.subscriberId) },
+          },
+        });
       }
     },
   })
