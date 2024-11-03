@@ -1,7 +1,7 @@
 import { GraphQLInputObjectType, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { UserType } from './user.js';
-import { PrismaClient } from '@prisma/client';
+import { ContextType } from './context.js';
 
 export interface IPostInput {
   title: string;
@@ -13,16 +13,17 @@ export interface IPost extends IPostInput {
   id: string;
 }
 
-export const PostType: GraphQLObjectType = new GraphQLObjectType({
+export const PostType: GraphQLObjectType<IPost, ContextType> = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({
-    id: { type: new GraphQLNonNull(UUIDType) },
-    title: { type: new GraphQLNonNull(GraphQLString) },
-    content: { type: new GraphQLNonNull(GraphQLString) },
+    id: { type: UUIDType },
+    title: { type: GraphQLString },
+    content: { type: GraphQLString },
+    authorId: { type: UUIDType },
     author: {
       type: UserType,
-      resolve: async (source: IPost, _args, { prisma }: { prisma: PrismaClient }) => {
-        return await prisma.user.findUnique({ where: { id: source.authorId } });
+      resolve: async (parent, _args, { prisma }: ContextType) => {
+        return await prisma.user.findUnique({ where: { id: parent?.authorId } });
       }
     },
   }),
@@ -30,17 +31,18 @@ export const PostType: GraphQLObjectType = new GraphQLObjectType({
 
 export const CreatePostInputType = new GraphQLInputObjectType({
   name: 'CreatePostInput',
-  fields: {
+  fields: () => ({
     title: { type: new GraphQLNonNull(GraphQLString) },
     content: { type: new GraphQLNonNull(GraphQLString) },
     authorId: { type: new GraphQLNonNull(UUIDType) },
-  },
+  }),
 });
 
 export const ChangePostInputType = new GraphQLInputObjectType({
   name: 'ChangePostInput',
-  fields: {
+  fields: () => ({
     title: { type: GraphQLString },
     content: { type: GraphQLString },
-  },
+    authorId: { type: UUIDType },
+  }),
 });
