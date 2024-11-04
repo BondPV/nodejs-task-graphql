@@ -20,7 +20,7 @@ export const mutation = new GraphQLObjectType({
       args: { id: { type: UUIDType },
       dto: { type: ChangePostInputType }},
       resolve: async (_parent, args: {id: string, dto: IPostInput }, { prisma }: ContextType) => {
-        return prisma.post.update({
+        return await prisma.post.update({
           where: { id: args.id },
           data: args.dto,
         });
@@ -43,7 +43,7 @@ export const mutation = new GraphQLObjectType({
       type: UserType,
       args: { dto: { type: CreateUserInputType } },
       resolve: async (_parent, args: { dto: IUserInput }, { prisma }: ContextType) => {
-        return prisma.user.create({
+        return await prisma.user.create({
           data: args.dto,
         });
       },
@@ -53,7 +53,7 @@ export const mutation = new GraphQLObjectType({
       args: { id: { type: UUIDType },
       dto: { type: ChangeUserInputType },},
       resolve: async (_parent, args: { dto: IUserInput, id: string }, { prisma }: ContextType) => {
-        return prisma.user.update({
+        return await prisma.user.update({
           where: { id: args.id },
           data: args.dto,
         });
@@ -78,7 +78,7 @@ export const mutation = new GraphQLObjectType({
       type: ProfileType,
       args: { dto: { type: CreateProfileInputType } },
       resolve: async (_parent, args: { dto: IProfileInput }, { prisma }: ContextType) => {
-        return prisma.profile.create({
+        return await prisma.profile.create({
           data: args.dto,
         });
       },
@@ -88,7 +88,7 @@ export const mutation = new GraphQLObjectType({
       args: { id: { type: UUIDType },
       dto: { type: ChangeProfileInputType },},
       resolve: async (_parent, args: { id: string , dto: IProfileInput }, { prisma }: ContextType) => {
-        return prisma.profile.update({
+        return await prisma.profile.update({
           where: { id: args.id },
           data: args.dto,
         });
@@ -123,7 +123,7 @@ export const mutation = new GraphQLObjectType({
           },
         });
   
-        const user = prisma.user.findUnique({ where: { id: args.userId } });
+        const user = await prisma.user.findUnique({ where: { id: args.userId } });
 
         return user;
       },
